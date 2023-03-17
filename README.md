@@ -5,7 +5,8 @@ Getting started and developing examples and demos on how to build operators usin
 [Scaffold new java operator SDK Application Skeleton](https://github.com/operator-framework/java-operator-plugins/blob/main/docs/tutorial.md) \
 Note: You need the Operator Sdk CLI Tool, Download it [here]()  
 
-After The Initial Scaffolding, You can choose Whether to use Quarkus Application or just plain JAVA Application In order to Create an entry point ( main function) for the operator application.
+After The Initial Scaffolding, You can choose Whether to use Quarkus Application or just plain JAVA Application In order to Create an entry point ( main function) for the operator application. 
+
 JAVA Without Quarkus
 ```java
 public class Runner {
