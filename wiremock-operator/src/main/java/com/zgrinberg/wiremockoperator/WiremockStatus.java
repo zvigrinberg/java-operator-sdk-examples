@@ -1,4 +1,4 @@
-package com.zgrinberg;
+package com.zgrinberg.wiremockoperator;
 
 public class WiremockStatus {
 

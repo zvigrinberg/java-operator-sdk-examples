@@ -1,4 +1,4 @@
-package com.zgrinberg;
+package com.zgrinberg.wiremockoperator;
 
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.javaoperatorsdk.operator.api.reconciler.Context;
