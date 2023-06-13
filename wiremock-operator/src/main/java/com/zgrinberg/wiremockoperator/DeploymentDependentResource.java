@@ -53,10 +53,13 @@ public class DeploymentDependentResource extends CRUDKubernetesDependentResource
                   .editLifecycle().editPostStart().withExec(new ExecActionBuilder().withCommand(List.of("/bin/sh","-c", postStartCommand)).build()).endPostStart().endLifecycle()
                   .withImagePullPolicy("IfNotPresent")
                   .editFirstPort().withName("http").withContainerPort(wiremockSpec.getServerPort()).endPort()
-                  .editEnv().withName("LISTENING_PORT")
-
-
-                .build();
+                  .editFirstEnv().withName("LISTENING_PORT").withValue(wiremockSpec.getServerPort().toString())
+                  .endEnv()
+                  .endContainer()
+                  .endSpec()
+                  .endTemplate()
+                  .endSpec()
+                  .build();
 
     }
 }
