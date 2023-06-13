@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
-  <component name="FacetManager">
-    <facet type="Quarkus" name="Quarkus">
-      <configuration />
-    </facet>
-  </component>
   <component name="Quarkus Tools">
     <option name="hash" value="1786085282" />
     <option name="version" value="1" />

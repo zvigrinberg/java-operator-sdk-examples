@@ -1,5 +1,7 @@
 package com.zgrinberg.wiremockoperator;
 
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientBuilder;
 import io.javaoperatorsdk.operator.Operator;
 import io.quarkus.runtime.Quarkus;
 import io.quarkus.runtime.QuarkusApplication;
@@ -18,6 +20,8 @@ public class WiremockOperator implements QuarkusApplication {
 
     @Override
     public int run(String... args) throws Exception {
+        KubernetesClient client = new KubernetesClientBuilder().build();
+//        operator.register(new WiremockReconciler(client));
         operator.start();
         Quarkus.waitForExit();
         return 0;
