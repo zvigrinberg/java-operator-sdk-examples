@@ -53,7 +53,7 @@ public class WiremockReconciler implements Reconciler<Wiremock>{
   }
 
   private Wiremock updateWiremockStatus(Wiremock wiremock, Deployment deployment, Service service) {
-    DeploymentStatus deploymentStatus = Objects.requireNonNull(deployment.getStatus(), (Supplier<String>) new DeploymentStatus());
+    DeploymentStatus deploymentStatus = deployment.getStatus();
     String fullWiremockAddress = String.format("http://%s.%s:%s",service.getMetadata().getName(),service.getMetadata().getNamespace(),service.getSpec().getPorts().get(0).getPort());
     WiremockStatus wiremockStatus = new WiremockStatus();
     wiremockStatus.setReadyReplicas(deploymentStatus.getReadyReplicas());
