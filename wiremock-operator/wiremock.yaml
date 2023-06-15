@@ -2,9 +2,8 @@ apiVersion: proxying.zgrinberg.com/v1
 kind: Wiremock
 metadata:
   name: wiremock
-  namespace: wiremock
 spec:
-  replicas: 2
+  replicas: 1
   version: latest
   imageRegistry: quay.io/zgrinber/wiremock
   serverPort: 8082
