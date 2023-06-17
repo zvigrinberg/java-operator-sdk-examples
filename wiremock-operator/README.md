@@ -61,13 +61,87 @@ oc get secret $SECRET -o yaml | yq  '.data."service-ca.crt"' | base64 -d > /path
 
 2. Run the operator
 ```shell
-mvn quarkus:dev
+QUARKUS_K8_CLIENT_TRUST_CERT=true mvn quarkus:dev
 ```
 
-### deploy on cluster
-1. Connect to desired cluster.
-2. Apply Operator deployments and RBAC resources. (TBD - install by OLM)
+### deploy on cluster and run using OLM
+1. Connect to desired cluster, and go to the desired namespace
+```shell
+oc project wiremock
+#or if not exists 
+oc new-project wiremock
+```
+2. Build the bundle image resources and build + push the operator image
+```shell
+mvn clean package -Dquarkus.container-image.build=true -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=quay.io -Dquarkus.container-image.build=true -Dquarkus.container-image.name=wiremock-operator -Dquarkus.container-image.group=zgrinber -Dquarkus.kubernetes.namespace=wiremock-test -Dquarkus.operator-sdk.bundle.package-name=wiremock-operator -Dquarkus.operator-sdk.bundle.channels=alpha
+```
+3. Build the bundle image
+```shell
+make bundle-build BUNDLE_IMG=quay.io/zgrinber/wiremock-operator-bundle:0.0.1-SNAPSHOT
+```
 
+4. push the bundle image
+```shell
+podman push quay.io/zgrinber/wiremock-operator-bundle:0.0.1-SNAPSHOT
+```
+
+5. Define the catalog image name and bundle image name
+```shell
+export CATALOG_IMAGE=quay.io/zgrinber/wiremock-catalog:v1
+export BUNDLE_IMG=quay.io/zgrinber/wiremock-operator-bundle:0.0.1-SNAPSHOT
+```
+6. build the index image/catalog image using opm tool
+```shell
+opm index add --bundles $BUNDLE_IMG --tag $CATALOG_IMAGE --build-tool podman
+```
+
+7. push the index/catalog image
+```shell
+podman push $CATALOG_IMAGE
+```
+
+8. Create the catalogsource in OLM namespace, in order to create registry pod to serve the bundle image to subscriptions to install the operator:
+```shell
+export OLM_NAMESPACE=openshift-marketplace
+cat <<EOF | kubectl apply -f -
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: my-catalog-source
+  namespace: $OLM_NAMESPACE
+spec:
+  sourceType: grpc
+  image: $CATALOG_IMAGE
+EOF
+```
+
+8. Create Operator group for `AllNamespaces` install mode
+```shell
+cat <<EOF | kubectl create -f -
+apiVersion: operators.coreos.com/v1alpha2
+kind: OperatorGroup
+metadata:
+  name: wiremock-og
+  namespace: wiremock
+
+EOF
+```
+
+9. Create Subscription to install the operator on the cluster
+```shell
+cat <<EOF | kubectl create -f -
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: wiremock-subscription
+  namespace: wiremock
+spec:
+  channel: alpha
+  name: wiremock-operator
+  source: wiremock-catalog-source
+  sourceNamespace: openshift-marketplace
+EOF
+```
 ## Test it
 1. Create new project
 ```shell
@@ -117,4 +191,18 @@ oc apply -f wiremock.yaml
 [zgrinber@zgrinber wiremock-operator]$ oc get pods
 NAME                        READY   STATUS    RESTARTS   AGE
 wiremock-57f78b5dfc-grncq   1/1     Running   0          11m
+```
+
+7. Delete the wiremock instance
+```shell
+oc delete wiremocks.proxying.zgrinberg.com wiremock
+```
+Output:
+```shell
+wiremock.proxying.zgrinberg.com "wiremock" deleted
+```
+8. See that wiremock app instance was removed
+```shell
+[zgrinber@zgrinber wiremock-operator]$ oc get pods
+No resources found in wiremock-test namespace.
 ```

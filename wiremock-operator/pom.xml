@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.zgrinberg</groupId>
   <artifactId>wiremock-operator</artifactId>
-  <name>wiremock-operator</name>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <name>wiremock-operator</name>
   <properties>
     <compiler-plugin.version>3.10.1</compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -15,12 +13,15 @@
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <quarkus-sdk.version>5.1.0</quarkus-sdk.version>
+    <quarkus-sdk.version>6.1.1</quarkus-sdk.version>
     <quarkus.version>2.16.3.Final</quarkus.version>
   </properties>
-
   <dependencyManagement>
     <dependencies>
+<!--      <dependency>-->
+<!--        <groupId>io.quarkus</groupId>-->
+<!--        <artifactId>quarkus-container-image-jib</artifactId>-->
+<!--      </dependency>-->
       <dependency>
         <groupId>io.quarkiverse.operatorsdk</groupId>
         <artifactId>quarkus-operator-sdk-bom</artifactId>
@@ -35,10 +36,10 @@
       <groupId>io.quarkiverse.operatorsdk</groupId>
       <artifactId>quarkus-operator-sdk</artifactId>
     </dependency>
-    <!-- Needed to generate OLM bundle. If you're not interested in this, you can remove this dependency -->
     <dependency>
       <groupId>io.quarkiverse.operatorsdk</groupId>
       <artifactId>quarkus-operator-sdk-bundle-generator</artifactId>
+      <version>6.1.1</version>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -46,11 +47,10 @@
       <version>${quarkus.version}</version>
     </dependency>
     <dependency>
-      <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-jdk15on</artifactId>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-docker</artifactId>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -64,14 +64,13 @@
             </goals>
           </execution>
         </executions>
-    </plugin>
-    <plugin>
-      <artifactId>maven-compiler-plugin</artifactId>
-      <version>${compiler-plugin.version}</version>
-    </plugin>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${compiler-plugin.version}</version>
+      </plugin>
     </plugins>
   </build>
-
   <profiles>
     <profile>
       <id>native</id>
@@ -80,5 +79,4 @@
       </properties>
     </profile>
   </profiles>
-
 </project>

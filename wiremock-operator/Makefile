@@ -83,7 +83,7 @@ bundle:  ## Generate bundle manifests and metadata, then validate generated file
 	
 .PHONY: bundle-build
 bundle-build: ## Build the bundle image.
-	docker build -f bundle.Dockerfile -t $(BUNDLE_IMG) .
+	docker build -f  ./target/bundle/wiremock-operator/bundle.Dockerfile -t $(BUNDLE_IMG) ./target/bundle/wiremock-operator
 	
 .PHONY: bundle-push
 bundle-push: ## Push the bundle image.
