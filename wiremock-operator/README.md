@@ -65,6 +65,13 @@ QUARKUS_K8_CLIENT_TRUST_CERT=true mvn quarkus:dev
 ```
 
 ### deploy on cluster and run using OLM
+
+#### Prerequisites 
+
+- Please [Download And install Operator Package manager](https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/opm-linux.tar.gz)
+- Download and install [Openshift cli](https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/openshift-client-linux.tar.gz)
+- Need a Podman/Docker CLI. (In case of docker, need docker engine - both Docker cli and Daemon).
+
 1. Connect to desired cluster, and go to the desired namespace
 ```shell
 oc project wiremock
